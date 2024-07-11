@@ -37,6 +37,7 @@ resource "aws_instance" "blog" {
   ami           = data.aws_ami.app_ami.id
   instance_type = var.instance_type
 
+  associate_public_ip_address = true  # Ensure public IP is assigned
   vpc_security_group_ids = [module.blog_sg.security_group_id]
 
   subnet_id = module.blog_vpc.public_subnets[0]
@@ -58,4 +59,8 @@ module "blog_sg" {
 
   egress_rules = ["all-all"]
   egress_cidr_blocks = ["0.0.0.0/0"]
+}
+
+output "instance_dns" {
+  value = aws_instance.blog.public_dns
 }
